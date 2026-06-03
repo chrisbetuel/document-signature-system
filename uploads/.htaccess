@@ -1,0 +1,7 @@
+# Prevent direct access to uploaded files
+Require all denied
+
+# Allow images and PDFs for preview (needed for preview-final)
+<FilesMatch "\.(png|jpg|jpeg|gif|pdf)$">
+    Require all granted
+</FilesMatch>

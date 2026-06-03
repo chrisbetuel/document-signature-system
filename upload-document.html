@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Document - DocSign</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F5F5F5;
+            color: #1A2A4A;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #1A2A4A;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            padding: 28px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .logo h2 {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .logo span {
+            color: #FFBF00;
+        }
+
+        .nav-menu {
+            padding: 20px 16px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 10px 16px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,191,0,0.1);
+            color: #FFBF00;
+        }
+
+        .nav-item.active {
+            background: #FFBF00;
+            color: #1A2A4A;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 32px 40px;
+        }
+
+        /* Header */
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1A2A4A;
+        }
+
+        .page-header p {
+            color: #8A8A8A;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: white;
+            border: 1px solid #E8E8E8;
+            border-radius: 12px;
+            padding: 28px;
+            max-width: 600px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #1A2A4A;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #DDD;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #FFBF00;
+        }
+
+        .file-info {
+            background: #FAFAFA;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #666;
+            border: 1px solid #E8E8E8;
+        }
+
+        .supported-formats {
+            font-size: 12px;
+            color: #8A8A8A;
+            margin-top: 6px;
+        }
+
+        button {
+            background: #FFBF00;
+            color: #1A2A4A;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: #E5AC00;
+        }
+
+        button:disabled {
+            background: #CCC;
+            cursor: not-allowed;
+        }
+
+        /* Gaps Preview */
+        .gaps-preview {
+            background: #FAFAFA;
+            border-left: 3px solid #FFBF00;
+            padding: 16px;
+            margin-top: 24px;
+            border-radius: 8px;
+        }
+
+        .gaps-preview h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1A2A4A;
+        }
+
+        .gaps-list {
+            max-height: 280px;
+            overflow-y: auto;
+        }
+
+        .gap-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #E8E8E8;
+        }
+
+        .gap-name {
+            font-weight: 500;
+            font-size: 13px;
+            color: #1A2A4A;
+        }
+
+        .gap-type {
+            font-size: 11px;
+            color: #8A8A8A;
+            margin-left: 8px;
+        }
+
+        .gap-placeholder {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+            font-family: monospace;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .btn-secondary {
+            background: #1A2A4A;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #0F1A2E;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            .logo h2 {
+                font-size: 18px;
+                text-align: center;
+            }
+            .logo span, .nav-item span:last-child {
+                display: none;
+            }
+            .nav-item {
+                text-align: center;
+                padding: 12px 0;
+            }
+            .main-content {
+                margin-left: 70px;
+                padding: 20px;
+            }
+            .form-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <h2>Doc<span>Sign</span></h2>
+        </div>
+        <div class="nav-menu">
+            <a href="index.html" class="nav-item">Dashboard</a>
+            <a href="create-category.html" class="nav-item">Categories</a>
+            <a href="upload-document.html" class="nav-item active">Upload</a>
+            <a href="templates.html" class="nav-item">Templates</a>
+            <a href="documents.html" class="nav-item">Documents</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="page-header">
+            <h1>Upload Document</h1>
+            <p>Upload a document with placeholders like [FIELD_NAME] or _______</p>
+        </div>
+
+        <div class="form-card">
+            <form id="upload-form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="category-id" required>
+                        <option value="">Loading...</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Document</label>
+                    <input type="file" id="document-file" accept=".docx,.txt,.pdf" required>
+                    <div class="supported-formats">Supported: TXT, DOCX, PDF</div>
+                    <div id="file-info" class="file-info hidden"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Document Name (optional)</label>
+                    <input type="text" id="doc-name" placeholder="Leave blank to use filename">
+                </div>
+                
+                <button type="submit" id="submit-btn">Upload & Analyze</button>
+            </form>
+            
+            <div id="gaps-result" class="gaps-preview hidden">
+                <h3>Detected Gaps</h3>
+                <div id="gaps-list" class="gaps-list"></div>
+                <div id="action-buttons" class="btn-group hidden">
+                    <button onclick="fillGaps()">Fill Gaps</button>
+                    <button onclick="uploadAnother()" class="btn-secondary">Upload Another</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let lastDocumentId = null;
+        
+        document.getElementById('document-file').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const info = document.getElementById('file-info');
+                info.style.display = 'block';
+                info.innerHTML = `<strong>${file.name}</strong> · ${(file.size / 1024).toFixed(1)} KB · ${file.type || 'Unknown'}`;
+            }
+        });
+        
+        async function loadCategories() {
+            try {
+                const response = await fetch('api/category.php');
+                const result = await response.json();
+                const select = document.getElementById('category-id');
+                if (result.success && result.data && result.data.length > 0) {
+                    select.innerHTML = '<option value="">Select Category</option>' + 
+                        result.data.map(cat => `<option value="${cat.id}">${escapeHtml(cat.name)}</option>`).join('');
+                } else {
+                    select.innerHTML = '<option value="">No categories found. Create one first.</option>';
+                }
+            } catch(e) {
+                console.log('Error loading categories:', e);
+            }
+        }
+        
+        document.getElementById('upload-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const categoryId = document.getElementById('category-id').value;
+            if (!categoryId) {
+                alert('Please select a category');
+                return;
+            }
+            
+            const fileInput = document.getElementById('document-file');
+            if (!fileInput.files.length) {
+                alert('Please select a file');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('category_id', categoryId);
+            formData.append('document', fileInput.files[0]);
+            formData.append('doc_name', document.getElementById('doc-name').value);
+            
+            const submitBtn = document.getElementById('submit-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Analyzing...';
+            submitBtn.disabled = true;
+            
+            try {
+                const response = await fetch('api/upload.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    lastDocumentId = result.document_id;
+                    displayGaps(result.gaps);
+                    document.getElementById('gaps-result').classList.remove('hidden');
+                    document.getElementById('action-buttons').classList.remove('hidden');
+                    submitBtn.textContent = 'Uploaded';
+                } else {
+                    alert('Error: ' + result.message);
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }
+            } catch(error) {
+                alert('Upload failed: ' + error.message);
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+        
+        function displayGaps(gaps) {
+            const container = document.getElementById('gaps-list');
+            if (!gaps || gaps.length === 0) {
+                container.innerHTML = '<div style="padding: 12px 0;">No gaps detected. Document is complete.</div>';
+                return;
+            }
+            
+            let html = `<div style="margin-bottom: 8px; font-size: 12px; color: #666;">Total: ${gaps.length} gap${gaps.length !== 1 ? 's' : ''}</div>`;
+            gaps.forEach(gap => {
+                html += `
+                    <div class="gap-item">
+                        <div>
+                            <span class="gap-name">${escapeHtml(gap.name)}</span>
+                            <span class="gap-type">${gap.type}</span>
+                        </div>
+                        <div class="gap-placeholder">${escapeHtml(gap.placeholder)}</div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+        
+        function fillGaps() {
+            if (lastDocumentId) {
+                window.location.href = `fill-gaps.html?id=${lastDocumentId}`;
+            }
+        }
+        
+        function uploadAnother() {
+            document.getElementById('upload-form').reset();
+            document.getElementById('gaps-result').classList.add('hidden');
+            document.getElementById('action-buttons').classList.add('hidden');
+            document.getElementById('file-info').style.display = 'none';
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.textContent = 'Upload & Analyze';
+            submitBtn.disabled = false;
+            document.getElementById('category-id').value = '';
+            loadCategories();
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+        }
+        
+        loadCategories();
+    </script>
+</body>
+</html>

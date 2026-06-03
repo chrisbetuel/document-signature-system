@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Create Category - DocSign</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F5F5F5;
+            color: #1A2A4A;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #1A2A4A;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            padding: 28px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .logo h2 {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .logo span {
+            color: #FFBF00;
+        }
+
+        .nav-menu {
+            padding: 20px 16px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 10px 16px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,191,0,0.1);
+            color: #FFBF00;
+        }
+
+        .nav-item.active {
+            background: #FFBF00;
+            color: #1A2A4A;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 32px 40px;
+        }
+
+        /* Header */
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1A2A4A;
+        }
+
+        .page-header p {
+            color: #8A8A8A;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: white;
+            border: 1px solid #E8E8E8;
+            border-radius: 12px;
+            padding: 28px;
+            max-width: 500px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #1A2A4A;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #DDD;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #FFBF00;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #8A8A8A;
+            margin-top: 6px;
+        }
+
+        button {
+            background: #FFBF00;
+            color: #1A2A4A;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: #E5AC00;
+        }
+
+        .status {
+            margin-top: 16px;
+            font-size: 13px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .status-success {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .status-error {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 16px;
+            color: #8A8A8A;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .back-link:hover {
+            color: #FFBF00;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            .logo h2 {
+                font-size: 18px;
+                text-align: center;
+            }
+            .logo span, .nav-item span:last-child {
+                display: none;
+            }
+            .nav-item {
+                text-align: center;
+                padding: 12px 0;
+            }
+            .main-content {
+                margin-left: 70px;
+                padding: 20px;
+            }
+            .form-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <h2>Doc<span>Sign</span></h2>
+        </div>
+        <div class="nav-menu">
+            <a href="index.html" class="nav-item">Dashboard</a>
+            <a href="create-category.html" class="nav-item active">Categories</a>
+            <a href="upload-document.html" class="nav-item">Upload</a>
+            <a href="templates.html" class="nav-item">Templates</a>
+            <a href="documents.html" class="nav-item">Documents</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="page-header">
+            <h1>Create Category</h1>
+            <p>Organize your documents by creating categories</p>
+        </div>
+
+        <div class="form-card">
+            <form id="category-form">
+                <div class="form-group">
+                    <label>Category Name</label>
+                    <input type="text" id="category-name" placeholder="e.g., Contracts, Invoices, NDAs" required>
+                    <div class="hint">This will help organize your documents</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Description (optional)</label>
+                    <textarea id="category-desc" placeholder="Describe what this category is for..."></textarea>
+                </div>
+
+                <button type="submit" id="submit-btn">Create Category</button>
+                <div id="status" class="status" style="display: none;"></div>
+                <a href="index.html" class="back-link">← Back to Dashboard</a>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('category-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('category-name').value.trim();
+            if (!name) {
+                showStatus('Please enter a category name', 'error');
+                return;
+            }
+            
+            const submitBtn = document.getElementById('submit-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Creating...';
+            submitBtn.disabled = true;
+            
+            const data = {
+                name: name,
+                description: document.getElementById('category-desc').value.trim(),
+                fields: []
+            };
+            
+            try {
+                const response = await fetch('api/category.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showStatus('Category created successfully!', 'success');
+                    document.getElementById('category-form').reset();
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    showStatus('Error: ' + (result.message || 'Failed to create category'), 'error');
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }
+            } catch(error) {
+                showStatus('Error: ' + error.message, 'error');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+        
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status status-${type}`;
+            statusDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

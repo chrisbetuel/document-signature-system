@@ -1,0 +1,24 @@
+# Enable access to all files
+Require all granted
+Allow from all
+
+# Allow PHP execution
+<FilesMatch "\.php$">
+    Require all granted
+</FilesMatch>
+
+# Allow access to uploads directory
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^uploads/ - [L,NC]
+</IfModule>
+
+# Disable directory browsing for security
+Options -Indexes
+
+# Set default character set
+AddDefaultCharset UTF-8
+
+# Enable error reporting for debugging
+php_flag display_errors on
+php_value error_reporting E_ALL

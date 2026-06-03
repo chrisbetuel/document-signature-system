@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard - DocSign</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F5F5F5;
+            color: #1A2A4A;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #1A2A4A;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            padding: 28px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .logo h2 {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .logo span {
+            color: #FFBF00;
+        }
+
+        .nav-menu {
+            padding: 20px 16px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 10px 16px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,191,0,0.1);
+            color: #FFBF00;
+        }
+
+        .nav-item.active {
+            background: #FFBF00;
+            color: #1A2A4A;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 32px 40px;
+        }
+
+        /* Header */
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1A2A4A;
+        }
+
+        .page-header p {
+            color: #8A8A8A;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 24px;
+            min-width: 160px;
+            flex: 1;
+            border: 1px solid #E8E8E8;
+            transition: all 0.2s;
+        }
+
+        .stat-box:hover {
+            border-color: #FFBF00;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1A2A4A;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #8A8A8A;
+            margin-top: 6px;
+        }
+
+        /* Navigation Cards */
+        .nav-section {
+            margin-top: 32px;
+        }
+
+        .nav-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1A2A4A;
+            margin-bottom: 16px;
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .nav-card {
+            background: white;
+            border: 1px solid #E8E8E8;
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: block;
+        }
+
+        .nav-card:hover {
+            border-color: #FFBF00;
+            transform: translateY(-2px);
+        }
+
+        .nav-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1A2A4A;
+            margin-bottom: 6px;
+        }
+
+        .nav-card-desc {
+            font-size: 12px;
+            color: #8A8A8A;
+        }
+
+        /* Recent Documents */
+        .recent-section {
+            margin-top: 32px;
+        }
+
+        .recent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .recent-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1A2A4A;
+        }
+
+        .refresh-btn {
+            background: none;
+            border: 1px solid #E8E8E8;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .refresh-btn:hover {
+            border-color: #FFBF00;
+        }
+
+        .doc-card {
+            background: white;
+            border: 1px solid #E8E8E8;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 14px 20px;
+            background: #FAFAFA;
+            font-weight: 600;
+            font-size: 13px;
+            color: #1A2A4A;
+            border-bottom: 1px solid #E8E8E8;
+        }
+
+        td {
+            padding: 14px 20px;
+            font-size: 13px;
+            color: #444;
+            border-bottom: 1px solid #F0F0F0;
+        }
+
+        tr:hover td {
+            background: #FAFAFA;
+        }
+
+        /* Status */
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-template {
+            background: #E8E8E8;
+            color: #555;
+        }
+
+        .status-gap_detected {
+            background: #FFF3E0;
+            color: #CC7B00;
+        }
+
+        .status-filled {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .status-signed {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+
+        /* Buttons */
+        .btn-sm {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background: #1A2A4A;
+            color: white;
+            transition: all 0.2s;
+        }
+
+        .btn-sm:hover {
+            background: #0F1A2E;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #8A8A8A;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 2px solid #E8E8E8;
+            border-top-color: #FFBF00;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            .logo h2 {
+                font-size: 18px;
+                text-align: center;
+            }
+            .logo span, .nav-item span:last-child {
+                display: none;
+            }
+            .nav-item {
+                text-align: center;
+                padding: 12px 0;
+            }
+            .main-content {
+                margin-left: 70px;
+                padding: 20px;
+            }
+            .stat-number {
+                font-size: 24px;
+            }
+            .stat-box {
+                padding: 14px 18px;
+                min-width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <h2>Doc<span>Sign</span></h2>
+        </div>
+        <div class="nav-menu">
+            <a href="index.html" class="nav-item active">Dashboard</a>
+            <a href="create-category.html" class="nav-item">Categories</a>
+            <a href="upload-document.html" class="nav-item">Upload</a>
+            <a href="templates.html" class="nav-item">Templates</a>
+            <a href="documents.html" class="nav-item">Documents</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="page-header">
+            <h1>Dashboard</h1>
+            <p>Manage your documents, track gaps, and sign digitally</p>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-number" id="total-docs">0</div>
+                <div class="stat-label">Total Documents</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="signed-docs">0</div>
+                <div class="stat-label">Signed</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="total-cats">0</div>
+                <div class="stat-label">Categories</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="pending-docs">0</div>
+                <div class="stat-label">Pending</div>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <h3>Quick Actions</h3>
+            <div class="nav-grid">
+                <a href="upload-document.html" class="nav-card">
+                    <div class="nav-card-title">Upload Document</div>
+                    <div class="nav-card-desc">Upload a new document to sign</div>
+                </a>
+                <a href="create-category.html" class="nav-card">
+                    <div class="nav-card-title">Create Category</div>
+                    <div class="nav-card-desc">Organize documents by type</div>
+                </a>
+                <a href="documents.html" class="nav-card">
+                    <div class="nav-card-title">View Documents</div>
+                    <div class="nav-card-desc">See all your documents</div>
+                </a>
+                <a href="templates.html" class="nav-card">
+                    <div class="nav-card-title">Templates</div>
+                    <div class="nav-card-desc">Manage document templates</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="recent-section">
+            <div class="recent-header">
+                <h3>Recent Documents</h3>
+                <button class="refresh-btn" onclick="loadRecentDocuments()">Refresh</button>
+            </div>
+            <div class="doc-card">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-list">
+                            <tr>
+                                <td colspan="5">
+                                    <div class="loading">
+                                        <div class="spinner"></div>
+                                        Loading...
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadStats() {
+            try {
+                const response = await fetch('api/documents.php');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const docs = result.data;
+                    document.getElementById('total-docs').textContent = docs.length;
+                    document.getElementById('signed-docs').textContent = docs.filter(d => d.status === 'signed').length;
+                    document.getElementById('pending-docs').textContent = docs.filter(d => d.status === 'gap_detected').length;
+                }
+            } catch(e) {
+                console.log('Stats error:', e);
+            }
+
+            try {
+                const response = await fetch('api/category.php');
+                const result = await response.json();
+                if (result.success && result.data) {
+                    document.getElementById('total-cats').textContent = result.data.length;
+                }
+            } catch(e) {
+                console.log('Categories error:', e);
+            }
+        }
+
+        async function loadRecentDocuments() {
+            const tbody = document.getElementById('recent-list');
+            tbody.innerHTML = '<tr><td colspan="5"><div class="loading"><div class="spinner"></div>Loading...</div></td></tr>';
+            
+            try {
+                const response = await fetch('api/documents.php');
+                const result = await response.json();
+                
+                if (result.success && result.data.length > 0) {
+                    const recent = result.data.slice(0, 5);
+                    tbody.innerHTML = recent.map(doc => `
+                        <tr>
+                            <td>${escapeHtml(doc.original_filename || 'Untitled')}</td>
+                            <td>${escapeHtml(doc.category_name || '-')}</td>
+                            <td><span class="status status-${doc.status}">${getStatusText(doc.status)}</span></td>
+                            <td>${formatDate(doc.created_at)}</td>
+                            <td><button class="btn-sm" onclick="viewDocument(${doc.id})">View</button></td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No documents yet. Upload your first document.</td></tr>';
+                }
+            } catch(e) {
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Error loading documents</td></tr>';
+            }
+        }
+
+        function getStatusText(status) {
+            const map = {
+                'template': 'Template',
+                'gap_detected': 'Gaps Detected',
+                'filled': 'Filled',
+                'signed': 'Signed'
+            };
+            return map[status] || status;
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const d = new Date(dateStr);
+            return `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
+        }
+
+        function viewDocument(id) {
+            window.open(`api/preview.php?document_id=${id}`, '_blank');
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+        }
+
+        loadStats();
+        loadRecentDocuments();
+    </script>
+</body>
+</html>

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Documents - DocSign</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F5F5F5;
+            color: #1A2A4A;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #1A2A4A;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            padding: 28px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .logo h2 {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .logo span {
+            color: #FFBF00;
+        }
+
+        .nav-menu {
+            padding: 20px 16px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 10px 16px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,191,0,0.1);
+            color: #FFBF00;
+        }
+
+        .nav-item.active {
+            background: #FFBF00;
+            color: #1A2A4A;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 32px 40px;
+        }
+
+        /* Header */
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1A2A4A;
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            background: white;
+            border-radius: 12px;
+            padding: 16px 24px;
+            min-width: 140px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #E8E8E8;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1A2A4A;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #8A8A8A;
+            margin-top: 4px;
+        }
+
+        /* Document Card */
+        .doc-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #E8E8E8;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #E8E8E8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .card-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1A2A4A;
+        }
+
+        .search-input {
+            padding: 8px 14px;
+            border: 1px solid #DDD;
+            border-radius: 8px;
+            font-size: 13px;
+            width: 220px;
+            font-family: inherit;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #FFBF00;
+        }
+
+        /* Table */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 14px 20px;
+            background: #FAFAFA;
+            font-weight: 600;
+            font-size: 13px;
+            color: #1A2A4A;
+            border-bottom: 1px solid #E8E8E8;
+        }
+
+        td {
+            padding: 14px 20px;
+            font-size: 13px;
+            color: #444;
+            border-bottom: 1px solid #F0F0F0;
+        }
+
+        tr:hover td {
+            background: #FAFAFA;
+        }
+
+        /* Status */
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-template {
+            background: #E8E8E8;
+            color: #555;
+        }
+
+        .status-gap_detected {
+            background: #FFF3E0;
+            color: #CC7B00;
+        }
+
+        .status-filled {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .status-signed {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-view {
+            background: #1A2A4A;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #0F1A2E;
+        }
+
+        .btn-download {
+            background: #28A745;
+            color: white;
+        }
+
+        .btn-download:hover {
+            background: #218838;
+        }
+
+        .btn-edit {
+            background: #FFBF00;
+            color: #1A2A4A;
+        }
+
+        .btn-edit:hover {
+            background: #E5AC00;
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .btn-whatsapp:hover {
+            background: #1DA851;
+        }
+
+        .btn-delete {
+            background: #DC3545;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #C82333;
+        }
+
+        /* Empty & Loading */
+        .empty-state {
+            text-align: center;
+            padding: 48px;
+            color: #8A8A8A;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 48px;
+        }
+
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 2px solid #E8E8E8;
+            border-top-color: #FFBF00;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            .logo h2 {
+                font-size: 18px;
+                text-align: center;
+            }
+            .logo span, .nav-item span:last-child {
+                display: none;
+            }
+            .nav-item {
+                text-align: center;
+                padding: 12px 0;
+            }
+            .main-content {
+                margin-left: 70px;
+                padding: 20px;
+            }
+            .stats-row {
+                gap: 10px;
+            }
+            .stat-box {
+                padding: 12px 16px;
+                min-width: 100px;
+            }
+            .stat-number {
+                font-size: 22px;
+            }
+            th, td {
+                padding: 10px 12px;
+            }
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <h2>Doc<span>Sign</span></h2>
+        </div>
+        <div class="nav-menu">
+            <a href="index.html" class="nav-item">Dashboard</a>
+            <a href="create-category.html" class="nav-item">Categories</a>
+            <a href="upload-document.html" class="nav-item">Upload</a>
+            <a href="templates.html" class="nav-item">Templates</a>
+            <a href="documents.html" class="nav-item active">Documents</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="page-header">
+            <h1>Documents</h1>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-number" id="total-docs">0</div>
+                <div class="stat-label">Total</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="pending-docs">0</div>
+                <div class="stat-label">Pending</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="completed-docs">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="signed-docs">0</div>
+                <div class="stat-label">Signed</div>
+            </div>
+        </div>
+
+        <div class="doc-card">
+            <div class="card-header">
+                <h2>All Documents</h2>
+                <input type="text" id="search-input" class="search-input" placeholder="Search..." onkeyup="filterDocuments()">
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Signer</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="documents-list">
+                        <tr>
+                            <td colspan="6">
+                                <div class="loading">
+                                    <div class="spinner"></div>
+                                    Loading...
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allDocuments = [];
+
+        async function loadDocuments() {
+            try {
+                const response = await fetch('api/documents.php');
+                const result = await response.json();
+                
+                if (result.success) {
+                    allDocuments = result.data;
+                    updateStats();
+                    renderDocuments(allDocuments);
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch(error) {
+                document.getElementById('documents-list').innerHTML = `
+                    <tr><td colspan="6" style="text-align:center;padding:40px;color:#DC3545;">
+                        Error loading documents<br>
+                        <button onclick="loadDocuments()" style="margin-top:10px;background:#FFBF00;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;">Retry</button>
+                    </td></tr>
+                `;
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('total-docs').textContent = allDocuments.length;
+            document.getElementById('pending-docs').textContent = allDocuments.filter(d => d.status === 'gap_detected').length;
+            document.getElementById('completed-docs').textContent = allDocuments.filter(d => d.status === 'filled').length;
+            document.getElementById('signed-docs').textContent = allDocuments.filter(d => d.status === 'signed').length;
+        }
+
+        function renderDocuments(docs) {
+            const tbody = document.getElementById('documents-list');
+            
+            if (!docs || docs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No documents found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = docs.map(doc => `
+                <tr>
+                    <td>${escapeHtml(doc.original_filename || 'Untitled')}</td>
+                    <td>${escapeHtml(doc.category_name || '-')}</td>
+                    <td><span class="status status-${doc.status}">${getStatusText(doc.status)}</span></td>
+                    <td>${escapeHtml(doc.signer_name || '-')}</td>
+                    <td>${formatDate(doc.created_at)}</td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-view" onclick="viewDocument(${doc.id})">View</button>
+                            <button class="btn btn-download" onclick="downloadDocument(${doc.id})">Download</button>
+                            <button class="btn btn-edit" onclick="editDocument(${doc.id})">Edit</button>
+                            <button class="btn btn-whatsapp" onclick="shareWhatsApp(${doc.id})">Share</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getStatusText(status) {
+            const map = {
+                'template': 'Template',
+                'gap_detected': 'Gaps Detected',
+                'filled': 'Filled',
+                'signed': 'Signed'
+            };
+            return map[status] || status;
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const d = new Date(dateStr);
+            return `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
+        }
+
+        function filterDocuments() {
+            const term = document.getElementById('search-input').value.toLowerCase();
+            const filtered = allDocuments.filter(d => 
+                (d.original_filename || '').toLowerCase().includes(term) ||
+                (d.category_name || '').toLowerCase().includes(term)
+            );
+            renderDocuments(filtered);
+        }
+
+        function viewDocument(id) {
+            window.open(`api/preview.php?document_id=${id}`, '_blank');
+        }
+
+        function downloadDocument(id) {
+            window.location.href = `api/download.php?document_id=${id}`;
+        }
+
+        function editDocument(id) {
+            window.location.href = `fill-gaps.html?id=${id}`;
+        }
+
+        function shareWhatsApp(id) {
+            const url = `${window.location.origin}/document-signature-system/api/preview.php?document_id=${id}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(url)}`, '_blank');
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+        }
+
+        loadDocuments();
+    </script>
+</body>
+</html>

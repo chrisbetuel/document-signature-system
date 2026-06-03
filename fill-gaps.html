@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit & Sign Document - DocSign</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F5F5F5;
+            color: #1A2A4A;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #1A2A4A;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            padding: 28px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .logo h2 {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .logo span {
+            color: #FFBF00;
+        }
+
+        .nav-menu {
+            padding: 20px 16px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 10px 16px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,191,0,0.1);
+            color: #FFBF00;
+        }
+
+        .nav-item.active {
+            background: #FFBF00;
+            color: #1A2A4A;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 32px 40px;
+        }
+
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1A2A4A;
+        }
+
+        .page-header p {
+            color: #8A8A8A;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        /* Workflow Steps */
+        .workflow-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            background: white;
+            border: 1px solid #E8E8E8;
+            border-radius: 12px;
+            padding: 20px;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+            min-width: 100px;
+        }
+
+        .step-number {
+            width: 36px;
+            height: 36px;
+            background: #E8E8E8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-weight: 600;
+            color: #8A8A8A;
+        }
+
+        .step.active .step-number {
+            background: #FFBF00;
+            color: #1A2A4A;
+        }
+
+        .step.completed .step-number {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 12px;
+            color: #8A8A8A;
+        }
+
+        .step.active .step-label {
+            color: #1A2A4A;
+            font-weight: 500;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border: 1px solid #E8E8E8;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            padding: 16px 24px;
+            background: #FAFAFA;
+            border-bottom: 1px solid #E8E8E8;
+        }
+
+        .card-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* Gaps List */
+        .gaps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .gap-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #FAFAFA;
+            border-radius: 8px;
+            border-left: 3px solid #FFBF00;
+        }
+
+        .gap-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .gap-placeholder {
+            font-family: monospace;
+            font-size: 12px;
+            color: #8A8A8A;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #FFBF00;
+            color: #1A2A4A;
+        }
+
+        .btn-primary:hover {
+            background: #E5AC00;
+        }
+
+        .btn-secondary {
+            background: #1A2A4A;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #0F1A2E;
+        }
+
+        .btn-outline {
+            background: white;
+            border: 1px solid #DDD;
+            color: #1A2A4A;
+        }
+
+        .btn-outline:hover {
+            border-color: #FFBF00;
+        }
+
+        .btn-success {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #43A047;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 24px;
+            justify-content: flex-end;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed #DDD;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .upload-area:hover {
+            border-color: #FFBF00;
+            background: #FAFAFA;
+        }
+
+        .upload-area input {
+            display: none;
+        }
+
+        /* Signature Pad */
+        .signature-container {
+            border: 1px solid #E8E8E8;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .signature-title {
+            font-weight: 600;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .signature-canvas {
+            border: 1px solid #DDD;
+            border-radius: 8px;
+            background: white;
+            cursor: crosshair;
+            width: 100%;
+            height: 150px;
+        }
+
+        .signature-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            background: #E8E8E8;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 2px solid #E8E8E8;
+            border-top-color: #FFBF00;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            .logo h2 {
+                font-size: 18px;
+                text-align: center;
+            }
+            .logo span, .nav-item span:last-child {
+                display: none;
+            }
+            .nav-item {
+                text-align: center;
+                padding: 12px 0;
+            }
+            .main-content {
+                margin-left: 70px;
+                padding: 20px;
+            }
+            .workflow-steps {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <h2>Doc<span>Sign</span></h2>
+        </div>
+        <div class="nav-menu">
+            <a href="index.html" class="nav-item">Dashboard</a>
+            <a href="create-category.html" class="nav-item">Categories</a>
+            <a href="upload-document.html" class="nav-item">Upload</a>
+            <a href="templates.html" class="nav-item">Templates</a>
+            <a href="documents.html" class="nav-item active">Documents</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="page-header">
+            <h1>Edit & Sign Document</h1>
+            <p id="doc-name">Loading document...</p>
+        </div>
+
+        <!-- Workflow Steps -->
+        <div class="workflow-steps" id="workflow-steps">
+            <div class="step active" id="step1">
+                <div class="step-number">1</div>
+                <div class="step-label">View Gaps</div>
+            </div>
+            <div class="step" id="step2">
+                <div class="step-number">2</div>
+                <div class="step-label">Download & Edit</div>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-number">3</div>
+                <div class="step-label">Upload Filled</div>
+            </div>
+            <div class="step" id="step4">
+                <div class="step-number">4</div>
+                <div class="step-label">Digital Signature</div>
+            </div>
+            <div class="step" id="step5">
+                <div class="step-number">5</div>
+                <div class="step-label">Finalize</div>
+            </div>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            Loading document...
+        </div>
+
+        <!-- Step 1: View Gaps -->
+        <div id="step1-content" class="card" style="display: none;">
+            <div class="card-header">
+                <h2>Fields to Fill</h2>
+            </div>
+            <div class="card-body">
+                <div id="gaps-list" class="gaps-list"></div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="goToStep2()">Continue to Edit</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Download & Edit -->
+        <div id="step2-content" class="card" style="display: none;">
+            <div class="card-header">
+                <h2>Download & Edit in Microsoft Word</h2>
+            </div>
+            <div class="card-body">
+                <p style="margin-bottom: 16px; color: #666; font-size: 14px;">
+                    Download the document and open it in <strong>Microsoft Word</strong>. 
+                    Fill in all the highlighted fields (______ or [FIELD_NAME]), then save and upload back.
+                </p>
+                <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="downloadDocument()">
+                        Download Document (DOCX)
+                    </button>
+                    <button class="btn btn-outline" onclick="previewDocument()">
+                        Preview Document
+                    </button>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="goToStep3()">I've edited the document →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Upload Filled Document -->
+        <div id="step3-content" class="card" style="display: none;">
+            <div class="card-header">
+                <h2>Upload Filled Document</h2>
+            </div>
+            <div class="card-body">
+                <div class="upload-area" onclick="document.getElementById('filled-file').click()">
+                    <div>Click to select your filled document</div>
+                    <div style="font-size: 12px; color: #8A8A8A; margin-top: 8px;">DOCX or PDF format</div>
+                    <input type="file" id="filled-file" accept=".docx,.pdf" style="display: none;">
+                </div>
+                <div id="upload-status" style="margin-top: 16px;"></div>
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="goToStep2()">← Back</button>
+                    <button class="btn btn-primary" onclick="uploadFilledDocument()">Upload & Extract</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Digital Signature -->
+        <div id="step4-content" class="card" style="display: none;">
+            <div class="card-header">
+                <h2>Digital Signature</h2>
+            </div>
+            <div class="card-body">
+                <div id="extracted-values" class="gaps-list" style="margin-bottom: 20px;"></div>
+                
+                <div class="signature-container">
+                    <div class="signature-title">✍️ Draw Your Signature Below</div>
+                    <canvas id="signature-canvas" class="signature-canvas" width="500" height="150"></canvas>
+                    <div class="signature-buttons">
+                        <button class="btn-small" onclick="clearSignature()">Clear</button>
+                        <button class="btn-small" onclick="saveSignature()">Save Signature</button>
+                    </div>
+                    <input type="hidden" id="signature-data">
+                </div>
+
+                <div class="signature-container" style="margin-top: 16px;">
+                    <div class="signature-title">📝 Or Type Your Name</div>
+                    <input type="text" id="typed-name" style="width: 100%; padding: 10px; border: 1px solid #DDD; border-radius: 8px;" placeholder="Type your full name to sign">
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="goToStep3()">← Back</button>
+                    <button class="btn btn-success" onclick="finalizeDocument()">Finalize & Save</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Finalize -->
+        <div id="step5-content" class="card" style="display: none;">
+            <div class="card-header">
+                <h2>Document Finalized</h2>
+            </div>
+            <div class="card-body" style="text-align: center;">
+                <div style="font-size: 48px; margin-bottom: 16px;">✅</div>
+                <h3 style="margin-bottom: 8px;">Document Successfully Signed!</h3>
+                <p style="color: #666; margin-bottom: 24px;">The document has been saved with all filled values and your digital signature.</p>
+                <div class="action-buttons" style="justify-content: center;">
+                    <button class="btn btn-primary" onclick="viewFinalPDF()">View PDF Document</button>
+                    <button class="btn btn-success" onclick="downloadFinalPDF()">Download PDF</button>
+                    <button class="btn btn-secondary" onclick="goToDocuments()">Go to Documents</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let documentId = null;
+        let documentName = null;
+        let gaps = [];
+        let extractedValues = {};
+        let signatureData = null;
+        let canvas = null;
+        let ctx = null;
+        let drawing = false;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        documentId = urlParams.get('id');
+
+        if (!documentId) {
+            alert('No document specified');
+            window.location.href = 'documents.html';
+        }
+
+        async function loadDocument() {
+            try {
+                const response = await fetch(`api/analyze.php?document_id=${documentId}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    documentName = result.document_name;
+                    gaps = result.gaps || [];
+
+                    document.getElementById('doc-name').textContent = documentName;
+                    
+                    displayGaps();
+                    
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('step1-content').style.display = 'block';
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch(error) {
+                document.getElementById('loading').innerHTML = `<div style="color: #C62828;">Error: ${error.message}</div>`;
+            }
+        }
+
+        function displayGaps() {
+            const container = document.getElementById('gaps-list');
+            
+            if (!gaps || gaps.length === 0) {
+                container.innerHTML = '<div style="padding: 20px; text-align: center;">No gaps detected. Document is complete.</div>';
+                return;
+            }
+            
+            let html = '';
+            gaps.forEach(gap => {
+                html += `
+                    <div class="gap-item">
+                        <div>
+                            <div class="gap-name">${escapeHtml(gap.name)}</div>
+                            <div class="gap-placeholder">${escapeHtml(gap.placeholder)}</div>
+                        </div>
+                        <span style="font-size: 11px; color: #8A8A8A;">${gap.type}</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function downloadDocument() {
+            window.location.href = `api/download-editable.php?document_id=${documentId}`;
+        }
+
+        function previewDocument() {
+            window.open(`api/preview.php?document_id=${documentId}`, '_blank');
+        }
+
+        function uploadFilledDocument() {
+            const fileInput = document.getElementById('filled-file');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select a file');
+                return;
+            }
+            
+            const statusDiv = document.getElementById('upload-status');
+            statusDiv.innerHTML = '<div class="spinner"></div> Processing...';
+            
+            const formData = new FormData();
+            formData.append('document_id', documentId);
+            formData.append('filled_document', file);
+            
+            fetch('api/extract-filled-values.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    extractedValues = result.values;
+                    displayExtractedValues();
+                    goToStep4();
+                } else {
+                    statusDiv.innerHTML = `<div style="color: #C62828;">Error: ${result.message}</div>`;
+                }
+            })
+            .catch(error => {
+                statusDiv.innerHTML = `<div style="color: #C62828;">Error: ${error.message}</div>`;
+            });
+        }
+
+        function displayExtractedValues() {
+            const container = document.getElementById('extracted-values');
+            
+            let html = '<strong>Extracted Values:</strong><br><br>';
+            gaps.forEach(gap => {
+                const value = extractedValues[gap.name] || 'Not found';
+                html += `
+                    <div class="gap-item">
+                        <div>
+                            <div class="gap-name">${escapeHtml(gap.name)}</div>
+                            <div class="gap-placeholder">${escapeHtml(value)}</div>
+                        </div>
+                        <span style="font-size: 11px; color: ${value !== 'Not found' ? '#4CAF50' : '#C62828'};">${value !== 'Not found' ? '✓' : '✗'}</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function initSignaturePad() {
+            canvas = document.getElementById('signature-canvas');
+            if (!canvas) return;
+            
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+            
+            ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseleave', stopDrawing);
+            
+            canvas.addEventListener('touchstart', startDrawingTouch);
+            canvas.addEventListener('touchmove', drawTouch);
+            canvas.addEventListener('touchend', stopDrawing);
+        }
+
+        function startDrawing(e) {
+            drawing = true;
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        function draw(e) {
+            if (!drawing) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+            ctx.lineTo(x, y);
+            ctx.strokeStyle = '#1A2A4A';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        function startDrawingTouch(e) {
+            e.preventDefault();
+            drawing = true;
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            const x = (touch.clientX - rect.left) * (canvas.width / rect.width);
+            const y = (touch.clientY - rect.top) * (canvas.height / rect.height);
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        function drawTouch(e) {
+            e.preventDefault();
+            if (!drawing) return;
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            const x = (touch.clientX - rect.left) * (canvas.width / rect.width);
+            const y = (touch.clientY - rect.top) * (canvas.height / rect.height);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
+            drawing = false;
+        }
+
+        function clearSignature() {
+            if (!ctx) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            document.getElementById('signature-data').value = '';
+            signatureData = null;
+        }
+
+        function saveSignature() {
+            if (!canvas) return;
+            signatureData = canvas.toDataURL('image/png');
+            document.getElementById('signature-data').value = signatureData;
+            alert('Signature saved!');
+        }
+
+        function finalizeDocument() {
+            const typedName = document.getElementById('typed-name').value;
+            const finalSignature = signatureData || typedName;
+            
+            if (!finalSignature && !typedName) {
+                alert('Please provide a signature (draw or type your name)');
+                return;
+            }
+            
+            const saveBtn = event.target;
+            saveBtn.textContent = 'Saving...';
+            saveBtn.disabled = true;
+            
+            const signatureValue = signatureData ? '✍️ [SIGNED]' : typedName;
+            
+            fetch('api/save-filled-values.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    document_id: documentId,
+                    values: extractedValues,
+                    signature: signatureData,
+                    signer_name: typedName || 'User'
+                })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    goToStep5();
+                } else {
+                    alert('Error: ' + result.message);
+                    saveBtn.textContent = 'Finalize & Save';
+                    saveBtn.disabled = false;
+                }
+            })
+            .catch(error => {
+                alert('Error: ' + error.message);
+                saveBtn.textContent = 'Finalize & Save';
+                saveBtn.disabled = false;
+            });
+        }
+
+        function viewFinalPDF() {
+            window.open(`api/preview-final.php?document_id=${documentId}`, '_blank');
+        }
+
+        function downloadFinalPDF() {
+            window.location.href = `api/download-final-pdf.php?document_id=${documentId}`;
+        }
+
+        function goToDocuments() {
+            window.location.href = 'documents.html';
+        }
+
+        function goToStep2() {
+            updateStep(2);
+            document.getElementById('step1-content').style.display = 'none';
+            document.getElementById('step2-content').style.display = 'block';
+            document.getElementById('step3-content').style.display = 'none';
+            document.getElementById('step4-content').style.display = 'none';
+            document.getElementById('step5-content').style.display = 'none';
+        }
+
+        function goToStep3() {
+            updateStep(3);
+            document.getElementById('step1-content').style.display = 'none';
+            document.getElementById('step2-content').style.display = 'none';
+            document.getElementById('step3-content').style.display = 'block';
+            document.getElementById('step4-content').style.display = 'none';
+            document.getElementById('step5-content').style.display = 'none';
+            document.getElementById('upload-status').innerHTML = '';
+            document.getElementById('filled-file').value = '';
+        }
+
+        function goToStep4() {
+            updateStep(4);
+            document.getElementById('step1-content').style.display = 'none';
+            document.getElementById('step2-content').style.display = 'none';
+            document.getElementById('step3-content').style.display = 'none';
+            document.getElementById('step4-content').style.display = 'block';
+            document.getElementById('step5-content').style.display = 'none';
+            initSignaturePad();
+        }
+
+        function goToStep5() {
+            updateStep(5);
+            document.getElementById('step1-content').style.display = 'none';
+            document.getElementById('step2-content').style.display = 'none';
+            document.getElementById('step3-content').style.display = 'none';
+            document.getElementById('step4-content').style.display = 'none';
+            document.getElementById('step5-content').style.display = 'block';
+        }
+
+        function updateStep(step) {
+            for (let i = 1; i <= 5; i++) {
+                const stepEl = document.getElementById(`step${i}`);
+                if (i < step) {
+                    stepEl.classList.add('completed');
+                    stepEl.classList.remove('active');
+                } else if (i === step) {
+                    stepEl.classList.add('active');
+                    stepEl.classList.remove('completed');
+                } else {
+                    stepEl.classList.remove('active', 'completed');
+                }
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+        }
+
+        loadDocument();
+    </script>
+</body>
+</html>
