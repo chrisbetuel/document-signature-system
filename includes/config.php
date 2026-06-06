@@ -18,6 +18,7 @@ if (!defined('PROJECT_ROOT')) define('PROJECT_ROOT', str_replace('\\', '/', real
 if (!defined('ORIGINAL_DIR')) define('ORIGINAL_DIR', rtrim(__DIR__ . '/../uploads/original/', '/\\') . '/');
 if (!defined('FILLED_DIR')) define('FILLED_DIR', rtrim(__DIR__ . '/../uploads/filled/', '/\\') . '/');
 if (!defined('SIGNATURE_DIR')) define('SIGNATURE_DIR', rtrim(__DIR__ . '/../uploads/signatures/', '/\\') . '/');
+if (!defined('OUTPUT_DIR')) define('OUTPUT_DIR', rtrim(__DIR__ . '/../output/', '/\\') . '/');
 
 // Return PDO connection
 function getDB(): PDO {

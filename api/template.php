@@ -66,16 +66,32 @@ try {
         $templateDoc = null;
 
         if ($categoryId) {
-            $tplStmt2 = $db->prepare("SELECT original_filename FROM documents WHERE category_id = ? AND status = 'template' ORDER BY id DESC LIMIT 1");
+            $tplStmt2 = $db->prepare("SELECT id, original_filename FROM documents WHERE category_id = ? AND status = 'template' ORDER BY id DESC LIMIT 1");
             $tplStmt2->execute([$categoryId]);
             $tplRow2 = $tplStmt2->fetch(PDO::FETCH_ASSOC);
 
             if ($tplRow2 && !empty($tplRow2['original_filename'])) {
+                $tplId = (int)$tplRow2['id'];
                 $templateDoc = [
+                    'id' => $tplId,
                     'filename' => (string)$tplRow2['original_filename'],
-                    'url' => 'api/download-template.php?category_id=' . $categoryId,
+                    'download_url' => 'api/download.php?document_id=' . $tplId,
+                    'preview_url' => 'api/preview-template.php?document_id=' . $tplId,
                 ];
             }
+        }
+
+        $docs = [];
+        if ($categoryId) {
+            $docStmt = $db->prepare("SELECT id, original_filename, status, created_at FROM documents WHERE category_id = ? ORDER BY id DESC");
+            $docStmt->execute([$categoryId]);
+            $docs = $docStmt->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($docs as &$d) {
+                $d['id'] = (int)$d['id'];
+                $d['download_url'] = 'api/download.php?document_id=' . $d['id'];
+                $d['preview_url'] = 'api/preview-template.php?document_id=' . $d['id'];
+            }
+            unset($d);
         }
 
         $out[] = [
@@ -86,6 +102,7 @@ try {
             ],
             'template' => $fields,
             'template_document' => $templateDoc,
+            'documents' => $docs,
         ];
     }
 

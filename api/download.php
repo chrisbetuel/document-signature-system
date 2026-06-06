@@ -35,9 +35,14 @@ try {
         $gaps = [];
     }
     
-    // Create filled document
-    $filePath = $document['original_path'];
-    if (!file_exists($filePath)) {
+    // Serve filled_path if available, otherwise fall back to original_path
+    $filePath = null;
+    if ($document['filled_path'] && file_exists($document['filled_path'])) {
+        $filePath = $document['filled_path'];
+    } else {
+        $filePath = $document['original_path'];
+    }
+    if (!$filePath || !file_exists($filePath)) {
         die('File not found');
     }
     
@@ -68,7 +73,19 @@ try {
     }
     
     // For other file types, just download original
-    header('Content-Type: application/octet-stream');
+    $mimeTypes = [
+        'doc'  => 'application/msword',
+        'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'pdf'  => 'application/pdf',
+        'txt'  => 'text/plain',
+        'png'  => 'image/png',
+        'jpg'  => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+    ];
+    $ext = strtolower(pathinfo($document['original_filename'], PATHINFO_EXTENSION));
+    $mime = $mimeTypes[$ext] ?? 'application/octet-stream';
+
+    header('Content-Type: ' . $mime);
     header('Content-Disposition: attachment; filename="' . $document['original_filename'] . '"');
     header('Content-Length: ' . filesize($filePath));
     readfile($filePath);

@@ -121,6 +121,19 @@ try {
                   <img src="data:image/png;base64,' . $imageData . '" class="signature-image" alt="Signature">';
     }
     
+    // Check if we have a final output from placement
+    $outputPath = OUTPUT_DIR . 'final_' . $document_id . '_*.html';
+    $outputFiles = glob($outputPath);
+    if (!empty($outputFiles)) {
+        rsort($outputFiles);
+        $latestOutput = $outputFiles[0];
+        header('Content-Type: text/html');
+        header('Content-Disposition: attachment; filename="signed_' . $document['original_filename'] . '.html"');
+        header('Content-Length: ' . filesize($latestOutput));
+        readfile($latestOutput);
+        exit;
+    }
+
     $html .= '
         </div>
         
@@ -131,11 +144,12 @@ try {
     </html>';
     
     // Save and download
-    $downloadPath = TEMP_DIR . 'signed_document_' . $document_id . '.html';
+    if (!file_exists(OUTPUT_DIR)) mkdir(OUTPUT_DIR, 0777, true);
+    $downloadPath = OUTPUT_DIR . 'signed_document_' . $document_id . '.html';
     file_put_contents($downloadPath, $html);
     
     header('Content-Type: text/html');
-    header('Content-Disposition: attachment; filename="signed_document_' . $document_id . '.html"');
+    header('Content-Disposition: attachment; filename="signed_' . $document['original_filename'] . '.html"');
     header('Content-Length: ' . filesize($downloadPath));
     readfile($downloadPath);
     unlink($downloadPath);
